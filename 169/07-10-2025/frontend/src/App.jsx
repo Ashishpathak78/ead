@@ -1,4 +1,8 @@
+/* global process */
 import React, { useState } from "react";
+
+// Use the environment variable for backend URL
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function App() {
   const [formData, setFormData] = useState({
@@ -19,7 +23,7 @@ function App() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/api/students", {
+      const response = await fetch(`${BACKEND_URL}/api/students`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -65,18 +69,22 @@ function App() {
 
         <div>
           <label className="block mb-1 font-medium">Gender:</label>
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            <option value="">Select</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
+          <div className="flex gap-4">
+            {["Male", "Female", "Other"].map((g) => (
+              <label key={g} className="flex items-center gap-1">
+                <input
+                  type="radio"
+                  name="gender"
+                  value={g}
+                  checked={formData.gender === g}
+                  onChange={handleChange}
+                  required
+                  className="form-radio"
+                />
+                {g}
+              </label>
+            ))}
+          </div>
         </div>
 
         <div>
